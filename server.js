@@ -1,38 +1,8 @@
-let express = require('express');
-let bodyParser = require('body-parser');
-let pg = require('pg');
+const express = require('express');
+const bodyParser = require('body-parser');
 const PORT = 3001;
-let app = express();
-let pool = new pg.Pool({
-  port: 5432,
-  password: '',
-  host: 'localhost',
-  user: 'simongarber',
-  database: 'postgres',
-  max: 10
-});
-
-// pool.connect((err, db, done) => {
-//   if (err) {
-//     return console.log(err);
-//   } else {
-//     let user_email = 'simon.garber@gmail.com';
-//     let user_password_digest = 'password';
-//     let id = Math.random().toFixed(3);
-//     db.query(
-//       'INSERT INTO users (user_email, user_password_digest, id) VALUES($1, $2, $3)',
-//       [user_email, user_password_digest, id],
-//       (err, table) => {
-//         done();
-//         if (err) {
-//           console.log(err);
-//         } else {
-//           console.log('DB insert successful');
-//         }
-//       }
-//     );
-//   }
-// });
+const app = express();
+const db = require('./queries');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -46,29 +16,15 @@ app.use(function(request, response, next) {
   next();
 });
 
-app.post('/api/new-user', (request, response) => {
-  const user_email = request.body.email;
-  const user_password_digest = request.body.password;
-  var id = Math.random().toFixed(3);
-  let values = [user_email, user_password_digest, id];
-  pool.connect((err, db, done) => {
-    if (err) {
-      return response.status(400).send(err);
-    } else {
-      db.query(
-        'INSERT INTO users (user_email, user_password_digest, id) VALUES($1, $2, $3)',
-        [...values],
-        (err, table) => {
-          done();
-          if (err) {
-            console.log(err);
-          } else {
-            response.status(201).send(request.body);
-          }
-        }
-      );
-    }
-  });
+app.get('/', (request, response) => {
+  response.json({ info: 'node.js, express, Postgres' });
 });
+app.get('/api/fetch-user/:email', db.getUserByEmail);
+app.get('/api/cards/:card', db.getCards);
+// app.get('https://api.scryfall.com/cards?page=3',(request,response) => {
+//   return response.json(response)
+// })
+app.post('/api/new-user', db.createUser);
 
+app.post('api/save-card', db.saveCard);
 app.listen(PORT, () => console.log('listening on port ' + PORT));
