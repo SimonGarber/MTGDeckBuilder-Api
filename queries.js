@@ -9,6 +9,7 @@ const pool = new Pool({
   max: 10
 });
 
+// Query that returns a list of users in the db
 const getUsers = (request, response) => {
   pool.query('SELECT * FROM users ORDER BY id ASC', (error, results) => {
     if (error) {
@@ -17,10 +18,13 @@ const getUsers = (request, response) => {
     response.status(200).json(results.rows);
   });
 };
-
+// TODO: add bcrypt and jsonwebtoken for user authentication with corresponding logic
+// Query that returns a single user from db by username/email
 const getUserByEmail = (request, response) => {
   console.log(request);
   const email = request.params.email;
+  const password = request.params.password;
+  const values = [email, password];
   pool.query(
     'SELECT * FROM users WHERE user_email = $1',
     [email],
@@ -32,7 +36,7 @@ const getUserByEmail = (request, response) => {
     }
   );
 };
-
+// Query that adds a user to the db by email and password params from the front end
 const createUser = (request, response) => {
   const user_email = request.body.username;
   const user_password_digest = request.body.userpassword;
@@ -57,7 +61,8 @@ const createUser = (request, response) => {
     }
   });
 };
-
+// Query that saves a selected card to the db
+// TODO: create a connection between the users table, cards table and the mtgcards table
 const saveCard = (request, response) => {
   const user_email = request.body.username;
   const card_userID = request.body.card.id;
@@ -82,15 +87,7 @@ const saveCard = (request, response) => {
     }
   });
 };
-// ``SELECT  data->'name' as name from mtgcards`
-// Select *
-// from "Person"
-// Where emails @> '[{"type": "personal"}]'
-// SELECT * FROM users WHERE data->>'name' = 'John';
-// dbt3=# explain select * from products where order_details @> '{"l_shipmode" : "AIR"}';
-// select * from test_json where details #> '{Location,State}'='"NSW"';
-// select item_code, order_details->'l_shipdate' as shipment_date from product_details ;
-// select * from products where order_details @> '{"l_shipmode" : "AIR"}'
+// Query that runs a search against the mtgcards db based on a match with any text in any key within the card object
 const getCards = (request, response) => {
   const card = request.params.card;
   pool.connect((err, db) => {
@@ -99,9 +96,7 @@ const getCards = (request, response) => {
     } else {
       db.query(
         `
-        
-    SELECT * FROM mtgcards WHERE lower(data::text)::jsonb @> lower('{"name":"${card}"}')::jsonb`,
-
+        SELECT * FROM mtgcards WHERE lower(data::text) like lower('%${card}%');`,
         (error, table) => {
           if (error) {
             throw error;
@@ -113,8 +108,6 @@ const getCards = (request, response) => {
     }
   });
 };
-
-// this returns all named cards from the table mtgcards
 
 module.exports = {
   getUserByEmail,

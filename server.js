@@ -15,16 +15,17 @@ app.use(function(request, response, next) {
   );
   next();
 });
-
+// Root
 app.get('/', (request, response) => {
   response.json({ info: 'node.js, express, Postgres' });
 });
+// User login Route
 app.get('/api/fetch-user/:email', db.getUserByEmail);
+// Card Search Route
 app.get('/api/cards/:card', db.getCards);
-// app.get('https://api.scryfall.com/cards?page=3',(request,response) => {
-//   return response.json(response)
-// })
+// Create new user Route
 app.post('/api/new-user', db.createUser);
-
+// Add card to collection Route
 app.post('api/save-card', db.saveCard);
+
 app.listen(PORT, () => console.log('listening on port ' + PORT));
