@@ -23,6 +23,8 @@ app.get('/', (request, response) => {
 app.get('/api/fetch-user/:email', db.getUserByEmail);
 // Card Search Route
 app.get('/api/cards/:card', db.getCards);
+// Search by Set
+app.get('/api/sets/:set', db.setSearch);
 // Create new user Route
 app.post('/api/new-user', db.createUser);
 // Add card to collection Route

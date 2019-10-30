@@ -109,10 +109,33 @@ const getCards = (request, response) => {
   });
 };
 
+const setSearch = (request, response) => {
+  const set = request.params.set;
+  pool.connect((err, db) => {
+    console.log(request.params);
+    if (err) {
+      throw err;
+    } else {
+      db.query(
+        `
+        SELECT * FROM mtgcards WHERE (data->> 'set') = '${set}';`,
+        (error, table) => {
+          if (error) {
+            throw error;
+          } else {
+            return response.json(table.rows);
+          }
+        }
+      );
+    }
+  });
+};
+
 module.exports = {
   getUserByEmail,
   getUsers,
   createUser,
   saveCard,
-  getCards
+  getCards,
+  setSearch
 };
