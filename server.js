@@ -1,9 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const PORT = 3001;
+const port = process.env.PORT || 3001;
 const app = express();
 const db = require('./queries');
-
+const cards = require('./routes/api/cards');
+app.use('/api/cards', cards);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -30,4 +31,4 @@ app.post('/api/new-user', db.createUser);
 // Add card to collection Route
 app.post('api/save-card', db.saveCard);
 
-app.listen(PORT, () => console.log('listening on port ' + PORT));
+app.listen(port, () => console.log(`listening on port ${port}`));
