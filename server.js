@@ -3,8 +3,8 @@ const bodyParser = require('body-parser');
 const port = process.env.PORT || 3001;
 const app = express();
 const db = require('./queries');
-const cards = require('./routes/api/cards');
-app.use('/api/cards', cards);
+
+// app.use('/api/cards', cards);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -23,7 +23,7 @@ app.get('/', (request, response) => {
 // User login Route
 app.get('/api/fetch-user/:email', db.getUserByEmail);
 // Card Search Route
-app.get('/api/cards/:card', db.getCards);
+app.get('/api/cards/', db.getCards);
 // Search by Set
 app.get('/api/sets/:set', db.setSearch);
 // Create new user Route
