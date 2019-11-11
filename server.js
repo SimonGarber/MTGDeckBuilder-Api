@@ -4,7 +4,6 @@ const port = process.env.PORT || 3001;
 const app = express();
 const db = require('./queries');
 
-// app.use('/api/cards', cards);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -18,17 +17,9 @@ app.use(function(request, response, next) {
 });
 // Root
 app.get('/', (request, response) => {
-  response.json({ info: 'node.js, express, Postgres' });
+  response.json({ info: 'node.js, express, mongodb' });
 });
-// User login Route
-app.get('/api/fetch-user/:email', db.getUserByEmail);
-// Card Search Route
+
 app.get('/api/cards/', db.getCards);
-// Search by Set
-app.get('/api/sets/:set', db.setSearch);
-// Create new user Route
-app.post('/api/new-user', db.createUser);
-// Add card to collection Route
-app.post('api/save-card', db.saveCard);
 
 app.listen(port, () => console.log(`listening on port ${port}`));
