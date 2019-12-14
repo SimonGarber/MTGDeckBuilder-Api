@@ -6,7 +6,6 @@
   "dependencies": {
     "express": "^4.17.1",
     "mongodb": "^3.3.3",
-    "ngrok": "^3.2.7",
     "nodemon": "^1.19.4",
     "pg": "^7.12.1",
     "querystring": "^0.2.0"
@@ -15,7 +14,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "dev": "nodemon server.js -p 3003"
+    "dev": "nodemon server.js"
   },
   "repository": {
     "type": "git",
