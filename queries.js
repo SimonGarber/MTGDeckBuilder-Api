@@ -35,7 +35,7 @@ const getCards = async (request, response) => {
 
   async function loadCardsCollection() {
     const client = await mongodb.MongoClient.connect(
-      "mongodb+srv://admin:Dpb56MGY?8+ly11@cluster0-dposj.mongodb.net/test?retryWrites=true&w=majority",
+      "mongodb+srv://admin:mosHk2uBekny8wew@cluster0-dposj.mongodb.net/test?retryWrites=true&w=majority",
       {
         useUnifiedTopology: true,
         ignoreUndefined: true
