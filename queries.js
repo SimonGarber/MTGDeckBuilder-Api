@@ -15,7 +15,7 @@ const getCards = async (request, response) => {
     queryObj["cmc"] = parseInt(cmc);
   }
   if (typeLine !== "") {
-    queryObj["type_line"] = { $regex: `.*${typeLine}.*, *$options* : *i*` };
+    queryObj["type_line"] = { $regex: `.*${typeLine}.*` };
   }
   if (oracleText !== "") {
     queryObj["oracle_text"] = { $regex: `.*${oracleText}.*` };
