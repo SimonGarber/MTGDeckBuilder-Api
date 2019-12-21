@@ -19,7 +19,8 @@ app.use(function(request, response, next) {
 app.get("/", (request, response) => {
   response.json({ info: "node.js, express, mongodb" });
 });
-
+app.get("/api/users", db.getUser);
 app.get("/api/cards/", db.getCards);
+app.post(`/api/users/${userId}`, db.saveCard);
 
 app.listen(port, () => console.log("listening on port", port));

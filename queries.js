@@ -1,5 +1,23 @@
 const mongodb = require("mongodb");
 
+// Save card to user collection
+const saveCard = async (request, response) => {
+  const user = await loadUsersCollection();
+
+  const card = {
+    owerId: request.body.id,
+    cardId: request.body.card
+  };
+};
+
+// Get user from DB
+
+const getUser = async (request, response) => {
+  const user = await loadUsersCollection();
+};
+
+const addUser = async (request, response) => {};
+// Get cards from front end query
 const getCards = async (request, response) => {
   try {
     const cards = await loadCardsCollection();
@@ -28,7 +46,6 @@ const getCards = async (request, response) => {
     if (oracleText !== "") {
       queryObj["oracle_text"] = { $regex: `.*${oracleText}.*`, $options: "i" };
     }
-    // Query that checks if the Array of color identities contains the value passed in the form
     if (colorIdentity !== "") {
       queryObj["color_identity"] = {
         $regex: `.*${colorIdentity}.*`,
@@ -59,7 +76,7 @@ const getCards = async (request, response) => {
 
 async function loadCardsCollection() {
   const client = await mongodb.MongoClient.connect(
-    "mongodb+srv://admin:mosHk2uBekny8wew@cluster0-dposj.mongodb.net/test?retryWrites=true&w=majority",
+    "mongodb+srv://admin:admin1234@cluster0-dposj.mongodb.net/test?retryWrites=true&w=majority",
     {
       useUnifiedTopology: true,
       ignoreUndefined: true
@@ -68,6 +85,18 @@ async function loadCardsCollection() {
   return client.db("mtgcards").collection("data");
 }
 
+async function loadUsersCollection() {
+  const client = await mongodb.MongoClient.connect(
+    "mongodb+srv://admin:admin1234@cluster0-dposj.mongodb.net/test?retryWrites=true&w=majority",
+    {
+      useUnifiedTopology: true,
+      ignoreUndefined: true
+    }
+  );
+  return client.db("mtgcards").collection("users");
+}
 module.exports = {
-  getCards
+  getCards,
+  saveCard,
+  getUser
 };
