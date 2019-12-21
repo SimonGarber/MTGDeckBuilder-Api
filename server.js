@@ -1,11 +1,11 @@
 const express = require("express");
-const bodyParser = require("body-parser");
+// const bodyParser = require("body-parser");
 const port = process.env.PORT || 3000;
 const app = express();
 const db = require("./queries");
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(function(request, response, next) {
   response.header("Access-Control-Allow-Origin", "*");
@@ -19,8 +19,8 @@ app.use(function(request, response, next) {
 app.get("/", (request, response) => {
   response.json({ info: "node.js, express, mongodb" });
 });
-app.get("/api/users", db.getUser);
+app.get("/api/users/:id", db.getUser);
 app.get("/api/cards/", db.getCards);
-app.post(`/api/users/${userId}`, db.saveCard);
+// app.post(`/api/users/${userId}`, db.saveCard);
 
 app.listen(port, () => console.log("listening on port", port));
