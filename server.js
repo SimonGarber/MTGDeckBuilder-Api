@@ -1,26 +1,30 @@
+require("./users");
 const express = require("express");
-// const bodyParser = require("body-parser");
-const port = process.env.PORT || 3000;
+const mongoose = require("mongoose");
+const port = process.env.PORT || 3001;
+const connectDB = require("./db");
+const cardRoutes = require("./routes/api/cardRoutes");
+const authRoutes = require("./routes/api/authRoutes");
+const requireAuth = require("./requireAuth");
 const app = express();
-const db = require("./queries");
 
 app.use(express.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cardRoutes);
+app.use(authRoutes);
+app.use("/api/v1/users", cardRoutes, authRoutes);
+app.use("/api/v1/cards", cardRoutes);
+app.use("/api/v1/query", cardRoutes);
+app.use("/api/v1/users/cards", cardRoutes);
+connectDB();
 
-app.use(function(request, response, next) {
-  response.header("Access-Control-Allow-Origin", "*");
-  response.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
+mongoose.connection.on("connected", () => {
+  console.log("Connected to Mongo Instance");
 });
-// Root
-app.get("/", (request, response) => {
-  response.json({ info: "node.js, express, mongodb" });
+mongoose.connection.on("error", err => {
+  console.error("Error connecting to Mongo", err);
 });
-app.get("/api/users/:id", db.getUser);
-app.get("/api/cards/", db.getCards);
-// app.post(`/api/users/${userId}`, db.saveCard);
+app.get("/", requireAuth, (request, response) => {
+  response.send(`Your Email: ${request.user.email}`);
+});
 
 app.listen(port, () => console.log("listening on port", port));
