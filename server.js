@@ -1,6 +1,8 @@
 require("./users");
 const express = require("express");
 const mongoose = require("mongoose");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
 const port = process.env.PORT || 3001;
 const connectDB = require("./db");
 const cardRoutes = require("./routes/api/cardRoutes");
@@ -9,6 +11,8 @@ const requireAuth = require("./requireAuth");
 const app = express();
 
 app.use(express.json());
+app.use(cors());
+app.use(cookieParser());
 app.use(cardRoutes);
 app.use(authRoutes);
 app.use("/api/v1/users", cardRoutes, authRoutes);
@@ -24,6 +28,9 @@ mongoose.connection.on("error", err => {
   console.error("Error connecting to Mongo", err);
 });
 app.get("/", requireAuth, (request, response) => {
+  response.send(`Your Email: ${request.user.email}`);
+});
+app.get("/dashboard", requireAuth, (request, response) => {
   response.send(`Your Email: ${request.user.email}`);
 });
 

@@ -72,7 +72,6 @@ router.get("/api/v1/cards/:item", async (request, response) => {
 
 // Search for cards in the DB
 router.get("/api/v1/query", async (request, response) => {
-  console.log(request.params);
   try {
     const cards = await loadCardsCollection();
 
@@ -125,6 +124,7 @@ router.get("/api/v1/query", async (request, response) => {
     if (!queryResult) {
       return response.status(400).json({ success: false, error: "Some Error" });
     }
+
     response.status(200).json({ success: true, data: queryResult });
   } catch (err) {
     return response.status(422).send({ Error: err.message });
