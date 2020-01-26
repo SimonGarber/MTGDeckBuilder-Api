@@ -39,7 +39,6 @@ router.put("/api/v1/users/cards/delete/:id", (request, response) => {
 });
 // Find a User in the DB
 router.get("/api/v1/users/:id", async (request, response) => {
-  console.log("Params =>", request.params);
   try {
     const user = await User.findOne({ _id: request.params.id });
     if (!user) {
@@ -88,7 +87,7 @@ router.get("/api/v1/query", async (request, response) => {
       queryObj["name"] = { $regex: `.*${name}.*`, $options: "i" };
     }
     if (set !== "") {
-      queryObj["set"] = { $regex: `.*${set}.*`, $options: "i" };
+      queryObj["set_name"] = { $regex: `.*${set}.*`, $options: "i" };
     }
     if (cmc !== "") {
       queryObj["cmc"] = parseInt(cmc);
@@ -110,7 +109,7 @@ router.get("/api/v1/query", async (request, response) => {
       .find({
         $and: [
           { name: queryObj["name"] },
-          { set: queryObj["set"] },
+          { set_name: queryObj["set_name"] },
           { cmc: queryObj["cmc"] },
           { type_line: queryObj["type_line"] },
           { color_identity: queryObj["color_identity"] },
@@ -140,7 +139,7 @@ async function loadCardsCollection() {
       ignoreUndefined: true
     }
   );
-  return client.db("mtgcards").collection("data");
+  return client.db("mtgcards").collection("data2");
 }
 
 module.exports = router;
