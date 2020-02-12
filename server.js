@@ -6,7 +6,7 @@ const colors = require("colors");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 5000;
 const connectDB = require("./db");
 const cardRoutes = require("./routes/api/cardRoutes");
 const authRoutes = require("./routes/api/authRoutes");
@@ -30,12 +30,15 @@ app.use(
 
 app.use(cors());
 app.use(cookieParser());
+
 app.use(cardRoutes);
 app.use(authRoutes);
+app.use("/api/v1/usercards", cardRoutes);
 app.use("/api/v1/users", cardRoutes, authRoutes);
 app.use("/api/v1/cards", cardRoutes);
 app.use("/api/v1/query", cardRoutes);
 app.use("/api/v1/users/cards", cardRoutes);
+
 connectDB();
 
 mongoose.connection.on("connected", () => {
