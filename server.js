@@ -40,7 +40,7 @@ app.use("/api/v1/query", cardRoutes);
 app.use("/api/v1/users/cards", cardRoutes);
 
 connectDB();
-
+console.log(process.env);
 mongoose.connection.on("connected", () => {
 	console.log(
 		`Connected to Mongo Instance at => ${mongoose.connection.host.yellow.bold}`

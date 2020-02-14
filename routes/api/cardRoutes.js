@@ -113,46 +113,51 @@ router.post("/api/v1/query", async (request, response) => {
 			colorId,
 			colors
 		} = request.body;
-		let queryObj = {};
+		const queryArray = [];
 
 		if (cardName !== "") {
-			queryObj["name"] = { $regex: `.*${cardName}.*`, $options: "i" };
+			queryArray.push({ name: { $regex: `.*${cardName}.*`, $options: "i" } });
 		}
 		if (setName !== "") {
-			queryObj["set_name"] = { $regex: `.*${setName}.*`, $options: "i" };
+			queryArray.push({
+				set_name: { $regex: `.*${setName}.*`, $options: "i" }
+			});
 		}
 		if (cmc !== "") {
-			queryObj["cmc"] = parseInt(cmc);
+			queryArray.push({ cmc: parseInt(cmc) });
 		}
 		if (typeLine !== "") {
-			queryObj["type_line"] = { $regex: `.*${typeLine}.*`, $options: "i" };
+			queryArray.push({
+				type_line: { $regex: `.*${typeLine}.*`, $options: "i" }
+			});
 		}
 		if (oracleText !== "") {
-			queryObj["oracle_text"] = { $regex: `.*${oracleText}.*`, $options: "i" };
+			queryArray.push({
+				oracle_text: { $regex: `.*${oracleText}.*`, $options: "i" }
+			});
 		}
 		if (colorId !== "") {
-			queryObj["color_identity"] = {
-				$regex: `.*${colorId}.*`,
-				$options: "i"
-			};
+			queryArray.push({
+				color_identity: {
+					$regex: `.*${colorId}.*`,
+					$options: "i"
+				}
+			});
 		}
-		if (colors.length !== 0) {
-			queryObj["colors"] = colors;
+		if (colors.length > 0) {
+			queryArray.push({ colors: { $all: colors } });
 		}
 
-		console.log(colors.length);
 		const queryResult = await cards
 			.find({
-				$and: [
-					queryObj
-					// { name: queryObj["name"] },
-					// { set_name: queryObj["set_name"] },
-					// { cmc: queryObj["cmc"] },
-					// { type_line: queryObj["type_line"] },
-					// { color_identity: queryObj["color_identity"] },
-					// { oracle_text: queryObj["oracle_text"] },
-					// { colors: { $all: queryObj["colors"] } }
-				]
+				$and: queryArray
+				// { name: queryObj["name"] },
+				// { set_name: queryObj["set_name"] },
+				// { cmc: queryObj["cmc"] },
+				// { type_line: queryObj["type_line"] },
+				// { color_identity: queryObj["color_identity"] },
+				// { oracle_text: queryObj["oracle_text"] },
+				// { colors: { $all: queryObj["colors"] } }
 			})
 			.collation({ locale: "en", strength: 1 })
 
