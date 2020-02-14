@@ -101,6 +101,7 @@ router.get("/api/v1/cards/:item", async (request, response) => {
 
 // Query cards in the DB
 router.post("/api/v1/query", async (request, response) => {
+	console.log(request.body);
 	try {
 		const cards = await loadCardsCollection();
 		const {
@@ -135,20 +136,22 @@ router.post("/api/v1/query", async (request, response) => {
 				$options: "i"
 			};
 		}
-		if (colors !== []) {
+		if (colors.length !== 0) {
 			queryObj["colors"] = colors;
 		}
 
+		console.log(colors.length);
 		const queryResult = await cards
 			.find({
 				$and: [
-					{ name: queryObj["name"] },
-					{ set_name: queryObj["set_name"] },
-					{ cmc: queryObj["cmc"] },
-					{ type_line: queryObj["type_line"] },
-					{ color_identity: queryObj["color_identity"] },
-					{ oracle_text: queryObj["oracle_text"] },
-					{ colors: { $all: queryObj["colors"] } }
+					queryObj
+					// { name: queryObj["name"] },
+					// { set_name: queryObj["set_name"] },
+					// { cmc: queryObj["cmc"] },
+					// { type_line: queryObj["type_line"] },
+					// { color_identity: queryObj["color_identity"] },
+					// { oracle_text: queryObj["oracle_text"] },
+					// { colors: { $all: queryObj["colors"] } }
 				]
 			})
 			.collation({ locale: "en", strength: 1 })
